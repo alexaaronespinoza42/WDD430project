@@ -5,7 +5,7 @@ export default function Footer() {
       <div className="container mx-auto text-center">
         <p>© 2025 Handcrafted Haven. All rights reserved.</p>
         <p>
-          Created by <strong>Your Name</strong> for WDD 430, BYU-Idaho.
+          Created by <strong>Alexandre Espinoza</strong> for WDD 430, BYU-Idaho.
         </p>
       </div>
     </footer>
