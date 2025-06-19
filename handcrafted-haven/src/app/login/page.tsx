@@ -1,5 +1,3 @@
-'use client';
-
 import { signIn } from 'next-auth/react';
 
 export default function LoginPage() {
@@ -8,7 +6,7 @@ export default function LoginPage() {
       <h1 className="text-3xl font-bold mb-6">Login</h1>
       <p className="mb-4 text-gray-600">Sign in with your GitHub account to continue.</p>
       <button
-        onClick={() => signIn('github')}
+        onClick={() => signIn('github', { callbackUrl: '/' })}
         className="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition"
       >
         Sign in with GitHub

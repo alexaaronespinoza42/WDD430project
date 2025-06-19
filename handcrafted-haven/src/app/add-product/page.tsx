@@ -2,17 +2,22 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function AddProductPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [form, setForm] = useState({
-    name: '',
-    image: '',
-    price: '',
-    description: '',
-  });
+
+  const [form, setForm] = useState({ name: '', image: '', price: '', description: '' });
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/login');
+    }
+  }, [status, router]);
+
+  if (status === 'loading') return <p>Loading...</p>;
+  if (!session) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,21 +33,17 @@ export default function AddProductPage() {
     });
 
     if (res.ok) {
-      alert('Product added!');
-      setForm({ name: '', image: '', price: '', description: '' });
-      router.push('/'); // Redirige a la página principal
+      const { product } = await res.json();
+      router.push(`/products/${product.id}`);
     } else {
       alert('Error adding product.');
     }
   };
 
-  if (status === 'loading') return <p className="text-center mt-10">Loading...</p>;
-  if (!session) return null; // Redirigido desde useEffect
-
   return (
     <section className="max-w-xl mx-auto mt-10 p-6 border rounded shadow">
       <h1 className="text-2xl font-bold mb-4">Add a New Product</h1>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input name="name" value={form.name} onChange={handleChange} placeholder="Product Name" className="border p-2 rounded" />
         <input name="image" value={form.image} onChange={handleChange} placeholder="Image URL" className="border p-2 rounded" />
         <input name="price" value={form.price} onChange={handleChange} placeholder="Price" className="border p-2 rounded" />

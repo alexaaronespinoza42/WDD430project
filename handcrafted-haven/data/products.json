@@ -33,5 +33,12 @@
     "image": "https://media.istockphoto.com/id/636379014/es/foto/manos-la-formaci%C3%B3n-de-una-forma-de-coraz%C3%B3n-con-silueta-al-atardecer.jpg?s=612x612&w=0&k=20&c=R2BE-RgICBnTUjmxB8K9U0wTkNoCKZRi-Jjge8o_OgE=",
     "price": "200$",
     "description": "exp2\n"
+  },
+  {
+    "id": "6",
+    "name": "Experiment 3",
+    "image": "e3",
+    "price": "200$",
+    "description": "E3"
   }
 ]
