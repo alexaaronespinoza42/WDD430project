@@ -1,7 +1,23 @@
 import { notFound } from 'next/navigation';
-import { products } from '../../../data/products';
 
-export default function ProductPage({ params }: { params: { id: string } }) {
+interface Product {
+  id: string;
+  name: string;
+  price: string;
+  image: string;
+  description?: string;
+}
+
+type Props = {
+  params: {
+    id: string;
+  };
+};
+
+export default async function ProductPage({ params }: Props) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/products`);
+  const products: Product[] = await res.json();
+
   const product = products.find(p => p.id === params.id);
   if (!product) return notFound();
 
