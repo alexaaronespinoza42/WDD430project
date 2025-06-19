@@ -1,25 +1,7 @@
-// src/app/products/[id]/page.tsx
 import { notFound } from 'next/navigation';
-import { headers } from 'next/headers';
+import { products } from '../../../data/products';
 
-interface Product {
-  id: string;
-  name: string;
-  price: string;
-  image: string;
-  description?: string;
-}
-
-export default async function ProductPage({ params }: { params: { id: string } }) {
-  // Espera a que headers() se resuelva
-  const headersList = await headers();
-  const host = headersList.get('host');
-  const protocol = host?.startsWith('localhost') ? 'http' : 'https';
-  const base = `${protocol}://${host}`;
-
-  const res = await fetch(`${base}/api/products`);
-  const products: Product[] = await res.json();
-
+export default function ProductPage({ params }: { params: { id: string } }) {
   const product = products.find(p => p.id === params.id);
   if (!product) return notFound();
 

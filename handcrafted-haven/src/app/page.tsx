@@ -1,25 +1,8 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ProductCard from '../components/ProductCard';
-
-interface Product {
-  id: string;
-  name: string;
-  price: string;
-  image: string;
-}
+import { products } from '../data/products';
 
 export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    fetch('/api/products')
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
-  }, []);
-
   return (
     <>
       <section className="text-center py-12 bg-gray-100 rounded-lg text-black">
@@ -38,7 +21,7 @@ export default function HomePage() {
       <section id="products" className="mt-12">
         <h2 className="text-2xl font-semibold mb-6">Featured Products</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {products.map((product) => (
+          {products.map(product => (
             <Link href={`/products/${product.id}`} key={product.id}>
               <ProductCard
                 name={product.name}
