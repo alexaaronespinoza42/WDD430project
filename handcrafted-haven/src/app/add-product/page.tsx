@@ -1,8 +1,12 @@
 'use client';
 
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function AddProductPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [form, setForm] = useState({
     name: '',
     image: '',
@@ -26,10 +30,14 @@ export default function AddProductPage() {
     if (res.ok) {
       alert('Product added!');
       setForm({ name: '', image: '', price: '', description: '' });
+      router.push('/'); // Redirige a la página principal
     } else {
       alert('Error adding product.');
     }
   };
+
+  if (status === 'loading') return <p className="text-center mt-10">Loading...</p>;
+  if (!session) return null; // Redirigido desde useEffect
 
   return (
     <section className="max-w-xl mx-auto mt-10 p-6 border rounded shadow">

@@ -16,7 +16,7 @@ export default function ProductCard({ name, price, image }: ProductCardProps) {
       <div className="p-4">
         <h3 className="text-lg font-semibold mb-2">{name}</h3>
         <p className="text-gray-700 font-medium">${price}</p>
-        <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+        <button disabled className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
           View Details
         </button>
       </div>

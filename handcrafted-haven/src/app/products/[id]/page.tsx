@@ -1,46 +1,34 @@
 // src/app/products/[id]/page.tsx
-'use client';
+import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 
-import { useParams } from 'next/navigation';
+interface Product {
+  id: string;
+  name: string;
+  price: string;
+  image: string;
+  description?: string;
+}
 
-const mockProducts = [
-  {
-    id: '1',
-    name: 'Macramé Necklace',
-    price: '25.00',
-    description: 'Beautifully crafted macramé necklace made with natural materials.',
-    image: '/images/collar-macrame.jpg',
-  },
-  {
-    id: '2',
-    name: 'Handmade Notebook',
-    price: '15.00',
-    description: 'A unique handmade notebook with recycled paper and custom cover.',
-    image: '/images/cuaderno-artesanal.jpg',
-  },
-  {
-    id: '3',
-    name: 'Hand-Painted Mug',
-    price: '18.50',
-    description: 'Colorful ceramic mug hand-painted by local artists.',
-    image: '/images/taza-pintada.jpg',
-  },
-];
+export default async function ProductPage({ params }: { params: { id: string } }) {
+  // Espera a que headers() se resuelva
+  const headersList = await headers();
+  const host = headersList.get('host');
+  const protocol = host?.startsWith('localhost') ? 'http' : 'https';
+  const base = `${protocol}://${host}`;
 
-export default function ProductPage() {
-  const params = useParams();
-  const product = mockProducts.find((p) => p.id === params.id);
+  const res = await fetch(`${base}/api/products`);
+  const products: Product[] = await res.json();
 
-  if (!product) {
-    return <p>Product not found.</p>;
-  }
+  const product = products.find(p => p.id === params.id);
+  if (!product) return notFound();
 
   return (
-    <section className="max-w-3xl mx-auto mt-10 p-4 border rounded shadow">
-      <img src={product.image} alt={product.name} className="w-full h-64 object-cover rounded mb-4" />
-      <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-      <p className="text-lg text-gray-700 mb-4">${product.price}</p>
-      <p>{product.description}</p>
+    <section className="max-w-lg mx-auto p-6">
+      <img src={product.image} alt={product.name} className="w-full h-64 object-cover rounded" />
+      <h1 className="text-2xl font-bold mt-4">{product.name}</h1>
+      <p className="text-xl text-gray-700 mt-2">${product.price}</p>
+      {product.description && <p className="mt-4">{product.description}</p>}
     </section>
   );
 }

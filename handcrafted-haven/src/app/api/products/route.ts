@@ -1,40 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
 
-let products = [
-  {
-    id: '1',
-    name: 'Macramé Necklace',
-    price: '25.00',
-    image: '/images/collar-macrame.jpg',
-    description: 'Beautifully crafted macramé necklace made with natural materials.',
-  },
-  {
-    id: '2',
-    name: 'Handmade Notebook',
-    price: '15.00',
-    image: '/images/cuaderno-artesanal.jpg',
-    description: 'A unique handmade notebook with recycled paper and custom cover.',
-  },
-  {
-    id: '3',
-    name: 'Hand-Painted Mug',
-    price: '18.50',
-    image: '/images/taza-pintada.jpg',
-    description: 'Colorful ceramic mug hand-painted by local artists.',
-  },
-];
+const dataPath = path.join(process.cwd(), 'data', 'products.json');
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const json = fs.readFileSync(dataPath, 'utf-8');
+  const products: any[] = JSON.parse(json);
   return NextResponse.json(products);
 }
 
-export async function POST(req: NextRequest) {
-  const data = await req.json();
-  const newProduct = {
-    ...data,
-    id: (products.length + 1).toString(),
+export async function POST(request: NextRequest) {
+  const newProduct = (await request.json()) as {
+    name: string;
+    image: string;
+    price: string;
+    description: string;
   };
-  products.push(newProduct);
-  return NextResponse.json({ message: 'Product created', product: newProduct }, { status: 201 });
+
+  const json = fs.readFileSync(dataPath, 'utf-8');
+  const products = JSON.parse(json) as Array<Record<string, any>>;
+
+  const nextId = (products.length + 1).toString();
+  const product = { id: nextId, ...newProduct };
+  products.push(product);
+
+  fs.writeFileSync(dataPath, JSON.stringify(products, null, 2));
+
+  return NextResponse.json({ product }, { status: 201 });
 }
-    

@@ -1,60 +1,40 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import Link from 'next/link';
 
-export default function AddProductPage() {
+export default function Header() {
   const { data: session, status } = useSession();
-  const router = useRouter();
-
-  const [form, setForm] = useState({
-    name: '',
-    image: '',
-    price: '',
-    description: '',
-  });
-
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/login');
-    }
-  }, [status, router]);
-
-  if (status === 'loading') return <p className="text-center mt-10">Loading...</p>;
-  if (!session) return null; // Redirigido desde useEffect
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const res = await fetch('/api/products', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    });
-
-    if (res.ok) {
-      alert('Product added!');
-      setForm({ name: '', image: '', price: '', description: '' });
-    } else {
-      alert('Error adding product.');
-    }
-  };
+  const isLoggedIn = status === 'authenticated';
 
   return (
-    <section className="max-w-xl mx-auto mt-10 p-6 border rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">Add a New Product</h1>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <input name="name" value={form.name} onChange={handleChange} placeholder="Product Name" className="border p-2 rounded" />
-        <input name="image" value={form.image} onChange={handleChange} placeholder="Image URL" className="border p-2 rounded" />
-        <input name="price" value={form.price} onChange={handleChange} placeholder="Price" className="border p-2 rounded" />
-        <textarea name="description" value={form.description} onChange={handleChange} placeholder="Product Description" className="border p-2 rounded" />
-        <button type="submit" className="bg-green-600 text-white py-2 rounded hover:bg-green-700">Publish</button>
-      </form>
-    </section>
+    <header className="bg-white shadow-md p-4 flex justify-between items-center">
+      <Link href="/" className="text-2xl font-bold text-blue-600">Handcrafted Haven</Link>
+
+      <nav className="flex items-center gap-4">
+        {isLoggedIn && (
+          <>
+            <Link href="/account" className="hover:underline text-black">My Account</Link>
+            <Link href="/add-product" className="hover:underline text-black">Add Product</Link>
+            <span className="text-sm text-gray-700">{session.user?.name}</span>
+            <button
+              onClick={() => signOut({ callbackUrl: '/' })}
+              className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition text-sm"
+            >
+              Logout
+            </button>
+          </>
+        )}
+
+        {!isLoggedIn && (
+          <button
+            onClick={() => signIn('github', { callbackUrl: '/' })}
+            className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
+          >
+            Login
+          </button>
+        )}
+      </nav>
+    </header>
   );
 }
