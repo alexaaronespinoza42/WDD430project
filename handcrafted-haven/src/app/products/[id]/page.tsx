@@ -6,13 +6,6 @@ interface Product {
   description: string;
 }
 
-interface ProductPageProps {
-  params: {
-    id: string;
-  };
-}
-
-// Datos hardcoded (puedes agregar los tuyos)
 const products: Product[] = [
   {
     id: '1',
@@ -37,7 +30,12 @@ const products: Product[] = [
   },
 ];
 
-export default function ProductPage({ params }: ProductPageProps) {
+interface Props {
+  params: { id: string };
+}
+
+// **Declara async la función para cumplir con la firma esperada**
+export default async function ProductPage({ params }: Props) {
   const product = products.find((p) => p.id === params.id);
 
   if (!product) {
