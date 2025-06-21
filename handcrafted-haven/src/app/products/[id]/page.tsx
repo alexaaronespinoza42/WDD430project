@@ -1,4 +1,7 @@
-import Image from 'next/image';
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface Product {
   id: string;
@@ -32,23 +35,22 @@ const products: Product[] = [
   },
 ];
 
-export default async function ProductPage({ params }: { params: { id: string } | Promise<{ id: string }> }) {
-  const { id } = await params;
-  const product = products.find((p) => p.id === id);
+export default function ProductPage() {
+  const router = useRouter();
+  const [product, setProduct] = useState<Product | null>(null);
 
-  if (!product) {
-    return <p className="text-center mt-10">Producto no encontrado.</p>;
-  }
+  useEffect(() => {
+    const pathParts = window.location.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    const found = products.find((p) => p.id === id);
+    setProduct(found || null);
+  }, []);
+
+  if (!product) return <p className="text-center mt-10">Producto no encontrado.</p>;
 
   return (
     <section className="max-w-2xl mx-auto mt-10 p-6 border rounded shadow">
-      <Image
-        src={product.image}
-        alt={product.name}
-        width={400}
-        height={300}
-        className="mb-6 rounded"
-      />
+      <img src={product.image} alt={product.name} className="mb-6 w-full h-auto rounded" />
       <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
       <p className="text-xl text-gray-700 mb-2">${product.price}</p>
       <p className="text-gray-600">{product.description}</p>
