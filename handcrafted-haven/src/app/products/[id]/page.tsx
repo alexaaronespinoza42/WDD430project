@@ -16,24 +16,24 @@ interface ProductPageProps {
 const products: Product[] = [
   {
     id: '1',
-    name: 'Producto 1',
-    price: '10',
-    image: '/images/product1.jpg',
-    description: 'Descripción del producto 1',
+    name: 'Macramé Necklace',
+    price: '25.00',
+    image: '/images/collar-macrame.jpg',
+    description: 'Beautiful macramé necklace.',
   },
   {
     id: '2',
-    name: 'Producto 2',
-    price: '20',
-    image: '/images/product2.jpg',
-    description: 'Descripción del producto 2',
+    name: 'Handmade Notebook',
+    price: '15.00',
+    image: '/images/cuaderno-artesanal.jpg',
+    description: 'Recycled paper, handmade notebook.',
   },
   {
     id: '3',
-    name: 'Producto 3',
-    price: '30',
-    image: '/images/product3.jpg',
-    description: 'Descripción del producto 3',
+    name: 'Hand-Painted Mug',
+    price: '$18.50',
+    image: '/images/taza-pintada.jpg',
+    description: 'Hand painted Mug, Ecuadorian culture.',
   },
 ];
 
