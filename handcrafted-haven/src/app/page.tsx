@@ -5,7 +5,7 @@ import { products } from '../data/products';
 export default function HomePage() {
   return (
     <>
-      <section className="text-center py-12 bg-gray-100 rounded-lg text-black">
+      <section className="text-center py-12 bg-gray-300 rounded-lg text-black">
         <h1 className="text-4xl font-bold mb-4">Handcrafted Haven</h1>
         <p className="text-lg mb-6">
           Discover and support artisans who create unique, handmade products.
@@ -23,11 +23,12 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {products.map(product => (
             <Link href={`/products/${product.id}`} key={product.id}>
-              <ProductCard
-                name={product.name}
-                price={product.price}
-                image={product.image}
-              />
+            <ProductCard
+              id={product.id}
+              name={product.name}
+              price={product.price}
+              image={product.image}
+            />
             </Link>
           ))}
         </div>

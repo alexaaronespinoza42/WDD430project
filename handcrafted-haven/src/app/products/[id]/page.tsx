@@ -1,28 +1,41 @@
-import { notFound } from 'next/navigation';
+'use client';
+
+import { useEffect, useState } from 'react';
 
 interface Product {
   id: string;
   name: string;
   price: string;
   image: string;
-  description?: string;
+  description: string;
 }
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/products`, {
-    next: { revalidate: 60 },
-  });
-  const products: Product[] = await res.json();
+interface ProductPageProps {
+  params: {
+    id: string;
+  };
+}
 
-  const product = products.find(p => p.id === params.id);
-  if (!product) return notFound();
+export default function ProductPage({ params }: ProductPageProps) {
+  const [product, setProduct] = useState<Product | null>(null);
+
+  useEffect(() => {
+    fetch('/api/products')
+      .then((res) => res.json())
+      .then((data: Product[]) => {
+        const found = data.find((p) => p.id === params.id);
+        setProduct(found || null);
+      });
+  }, [params.id]);
+
+  if (!product) return <p className="text-center mt-10">Product not found.</p>;
 
   return (
-    <section className="max-w-lg mx-auto p-6">
-      <img src={product.image} alt={product.name} className="w-full h-64 object-cover rounded" />
-      <h1 className="text-2xl font-bold mt-4">{product.name}</h1>
-      <p className="text-xl text-gray-700 mt-2">${product.price}</p>
-      {product.description && <p className="mt-4">{product.description}</p>}
+    <section className="max-w-2xl mx-auto mt-10 p-6 border rounded shadow">
+      <img src={product.image} alt={product.name} className="mb-6 w-full h-auto rounded" />
+      <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+      <p className="text-xl text-gray-700 mb-2">${product.price}</p>
+      <p className="text-gray-600">{product.description}</p>
     </section>
   );
 }
