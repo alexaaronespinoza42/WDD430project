@@ -36,7 +36,6 @@ const products: Product[] = [
 ];
 
 export default function ProductPage() {
-  const router = useRouter();
   const [product, setProduct] = useState<Product | null>(null);
 
   useEffect(() => {
